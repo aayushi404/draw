@@ -1,25 +1,14 @@
 "use client"
-import { useState, useEffect } from "react"
+import { useState, useContext } from "react"
+import { WebSocketContext } from "../contexts/socket"
 
 const useSocket = () => {
-    const [socket, setSocket] = useState<WebSocket | null>(null)
-    const [loading, setLoading] = useState(true)
-    useEffect(() => {
-        const wss = new WebSocket("ws://localhost:8080")
-        wss.onopen = () => {
-            console.log("ws connected from client side")
-        }
-        wss.onmessage = (msg) => {
-            const data = JSON.parse(msg.data)
-            if (data.status === 200) {
-                console.log("user authenticated")
-                setLoading(false)
-                setSocket(wss)
-            }
-        }
-        () => wss.close()
-    }, [])
-    return {socket, loading}
+    const context = useContext(WebSocketContext)
+
+    if (!context) {
+        throw Error("useSocket hook must be used inside websocketprovider")
+    }
+    return context
 }
 
-export default useSocket;
+export default useSocket

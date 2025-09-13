@@ -5,14 +5,14 @@ import { ReactNode } from "react";
 interface ButtonProps {
   children: ReactNode;
   className?: string;
-  clickAction:() => void
+  type:"submit" | "reset" | "button" | undefined
 }
 
-export const Button = ({ children, className, clickAction }: ButtonProps) => {
+export const Button = ({ children, className, type}: ButtonProps) => {
   return (
     <button
       className={className}
-      onClick={clickAction}
+      type={type}
     >
       {children}
     </button>

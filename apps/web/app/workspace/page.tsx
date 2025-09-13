@@ -1,26 +1,15 @@
-"use client"
-import { redirect } from "next/navigation";
-import { Button } from "@repo/ui/button";
-import { createRoom, joinRoom } from "./actions";
-import { useSession } from "next-auth/react";
-import useSocket from "../../hooks/socket";
-import { useState, useEffect } from "react";
+import { getServerSession } from "next-auth"
+import Workspace from "../../components/joinspace"
+import { authOptions } from "../../lib/auth"
+import { redirect } from "next/navigation"
 
-export default function Workspace() {
-    const { data: session, status } = useSession();
-    const { socket, loading } = useSocket();
-    if (status !== "authenticated") {
+export default async function Page() {
+    const session = await getServerSession(authOptions)
+    if (!session) {
         redirect("/")
     }
-    if (!loading && socket) {
-        return (
-            <div>
-                <div>Create or Join a workspace</div>
-                <div>
-                    <Button clickAction={() => joinRoom(socket)} >Join Room</Button>
-                    <Button clickAction={() => createRoom(socket)}>Create Room</Button>
-                </div>
-            </div>
-        )
-    }
+    console.log("workspace")
+    return (
+        <Workspace session={ session } />
+    )
 }
