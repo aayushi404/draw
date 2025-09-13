@@ -37,6 +37,7 @@ model Chat {
   room    Room    @relation(fields: [roomId], references: [id])
   userId    String
   user    User    @relation(fields: [userId], references: [id])
+  message   String
 }
  
 model Account {

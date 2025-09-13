@@ -1,10 +1,15 @@
+type activeUsersType = {
+    name: string,
+    image:string
+}
+
 //ws -> client
 type incommingMessage = {
     type: "create" | "join",
     roomId: string,
-    user: {
-        name: string,
-        image?:string,
+    payload: {
+        activeUsers: activeUsersType[],
+        message?:string
     }
 } | {
     type: "message",
@@ -24,15 +29,14 @@ type incommingMessage = {
 type outgoingMessage = {
     type: "create" | "join",
     roomId:string
-    user: {
-        userId:string
-    }
+    userId:string
 } | {
     type: "message",
     roomId: string,
+    userId:string
     payload: {
         message:string
     }
 }
 
-export type { incommingMessage, outgoingMessage }
+export type { incommingMessage, outgoingMessage , activeUsersType}
