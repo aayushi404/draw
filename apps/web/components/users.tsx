@@ -1,8 +1,11 @@
-const Users = ({roomId}:{roomId:string}) => {
-    const users = getUsers(roomId)
+"use client"
+import { useWorkspaceContext } from "../hooks/storeHooks"
+
+const Users = () => {
+    const activeUsers = useWorkspaceContext((state) => state.activeUsers)
     return (
         <div>
-            {JSON.stringify(users)}
+            {JSON.stringify(activeUsers)}
         </div>
     )
 }

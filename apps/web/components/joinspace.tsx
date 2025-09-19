@@ -6,18 +6,22 @@ import { useState, useEffect } from "react";
 import { incommingMessage } from "@repo/common/types";
 import { Session } from "next-auth";
 import useSocket from "../hooks/socket";
+import { useWorkspaceContext } from "../hooks/storeHooks";
 
 export default function Workspace({session}:{session:Session}) {
     const [roomId, setRoomId] = useState("")
-    const {isConnected, socket, lastmessage} = useSocket()
+    const { isConnected, socket, lastmessage } = useSocket()
+    const updateActiveUsers = useWorkspaceContext((state) => state.updateActiveUsers)
     
     useEffect(() => {
         if (isConnected && socket && lastmessage) {
             if (lastmessage.type === "create" || lastmessage.type === "join") {
+                const activeUsers = lastmessage.payload.activeUsers
+                updateActiveUsers(activeUsers)
                 redirect(`/workspace/${lastmessage.roomId}`)                
             }  
         }
-        return () => socket?.close()
+        
     },[])
     async function joinFormAction(roomId: string) {
         if (socket && session) {

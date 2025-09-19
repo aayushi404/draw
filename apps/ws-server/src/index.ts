@@ -62,6 +62,7 @@ wss.on("connection", (ws) => {
                 const response: incommingMessage = {
                     type: "message",
                     roomId: data.roomId,
+                    userId:data.userId,
                     payload: {
                         message:data.payload.message
                     }

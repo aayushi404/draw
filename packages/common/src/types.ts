@@ -14,6 +14,7 @@ type incommingMessage = {
 } | {
     type: "message",
     roomId: string,
+    userId:string,
     payload: {
         message:string
     }
