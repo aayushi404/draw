@@ -1,5 +1,5 @@
 "use client"
-import { useState, useContext } from "react"
+import { useContext } from "react"
 import { WebSocketContext } from "../contexts/socket"
 
 const useSocket = () => {

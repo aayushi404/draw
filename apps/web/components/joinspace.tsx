@@ -1,31 +1,49 @@
 "use client"
-import { redirect } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { Button } from "@repo/ui/button";
-import { createRoom, joinRoom } from "../actions/joinspace";
+import { createRoom } from "../actions/joinspace";
 import { useState, useEffect } from "react";
-import { incommingMessage } from "@repo/common/types";
 import { Session } from "next-auth";
 import useSocket from "../hooks/socket";
 import { useWorkspaceContext } from "../hooks/storeHooks";
+import { outgoingMessage } from "@repo/common/types";
 
-export default function Workspace({session}:{session:Session}) {
+export default function Workspace({ session }: { session: Session }) {
+    const router = useRouter()
     const [roomId, setRoomId] = useState("")
     const { isConnected, socket, lastmessage } = useSocket()
-    const updateActiveUsers = useWorkspaceContext((state) => state.updateActiveUsers)
-    
+    const { updateActiveUsers, activeUsers} = useWorkspaceContext((state) => state)
     useEffect(() => {
         if (isConnected && socket && lastmessage) {
             if (lastmessage.type === "create" || lastmessage.type === "join") {
-                const activeUsers = lastmessage.payload.activeUsers
-                updateActiveUsers(activeUsers)
-                redirect(`/workspace/${lastmessage.roomId}`)                
+                const getactiveUsers = lastmessage.payload.activeUsers
+                console.log("joinspace useEffect ran")
+                updateActiveUsers(getactiveUsers)
+                console.log(activeUsers)
+                router.push(`/workspace/${lastmessage.roomId}`)                
             }  
         }
         
-    },[])
+    },[lastmessage])
     async function joinFormAction(roomId: string) {
         if (socket && session) {
-            joinRoom(socket, session.user.id, roomId)
+            const request: outgoingMessage = {
+            type:"join",
+            roomId: roomId,
+            userId:session.user.id
+            }
+            socket.send(JSON.stringify(request))
+        }
+    }
+    async function createFormAction() {
+        if(socket && session){
+            const roomId = await createRoom(session.user.id!)
+            const request: outgoingMessage = {
+                    type: "create",
+                    roomId: roomId,
+                    userId:session.user.id
+                }
+            socket.send(JSON.stringify(request))
         }
     }
     if (isConnected && socket) {
@@ -38,7 +56,7 @@ export default function Workspace({session}:{session:Session}) {
                         <input name="roomId" id="roomId" placeholder="123456" value={roomId} onChange={(e) => setRoomId(e.target.value)}/>
                         <Button type={ "submit"}>join</Button>
                     </form>
-                    <form action={() => createRoom(socket, session.user?.id)}>
+                    <form action={() => createFormAction()}>
                         <Button type="submit">create</Button>
                     </form>
                 </div>

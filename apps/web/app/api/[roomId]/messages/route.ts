@@ -1,7 +1,8 @@
 import prisma from "@repo/db/client";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { type msg } from "../../../../types/common";
 export async function GET(
+    request:NextRequest,
     {params}:{params:{roomId:string}}
 ) {
     const { roomId } = params
@@ -16,7 +17,7 @@ export async function GET(
         })
         const response :msg[]= []
         messages.forEach((m) => {
-            let msg = {
+            const msg = {
                 message: m.message,
                 createdAt: m.createdAt.toLocaleDateString("en-ZA"),
                 userId: m.userId,

@@ -13,19 +13,20 @@ const getUser = async (userId: string) => {
     return {name:user.name, image:user.image}
 }
 
-type chatProp = {
-    roomId: string,
-    userId: string,
-    message:string
-}
-const createChat = async ({roomId, userId, message}:chatProp) => {
-    await prisma.chat.create({
-        data: {
-            roomId: roomId,
-            userId: userId,
-            message:message
+const createChat = async (roomId: string, userId: string, message: string) => {
+    try {
+        await prisma.chat.create({
+            data: {
+                roomId: roomId,
+                userId: userId,
+                message: message
+            }
+        })
+    } catch (error) {
+        if (error instanceof Error) {
+            console.log(`Error occured: ${error.message}`)
         }
-    })
+    }
 }
 
 export {getUser, createChat}

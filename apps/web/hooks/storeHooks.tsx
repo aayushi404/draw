@@ -1,3 +1,4 @@
+"use client"
 import { useStore } from "zustand";
 import { type workspaceStore } from "../store/workspaceStore";
 import { useContext } from "react";

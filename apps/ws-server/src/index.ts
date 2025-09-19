@@ -49,7 +49,6 @@ wss.on("connection", (ws) => {
                     roomId: data.roomId,
                     payload: {
                         activeUsers: [{ name: userInfo.name!, image: userInfo.image! }],
-                        message:`${userInfo.name} joined the chat`
                     }
                 }
                 spaces[data.roomId]?.forEach(client => {
@@ -72,11 +71,7 @@ wss.on("connection", (ws) => {
                         client.send(JSON.stringify(response))
                     }
                 })
-                await createChat({
-                    roomId: data.roomId,
-                    userId: data.userId,
-                    message:data.payload.message
-                })
+                await createChat(data.roomId, data.userId,data.payload.message)
             }
         } catch (e) {
             const errorResponse: incommingMessage = {

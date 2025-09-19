@@ -1,8 +1,10 @@
-const ChatArea = ({roomId}:{roomId:string}) => {
-    const chats = getChats(roomId)
+import { useWorkspaceContext } from "../hooks/storeHooks"
+
+const ChatArea = () => {
+    const messages = useWorkspaceContext((state) => state.messages)
     return (
         <div>
-            {JSON.stringify(chats)}
+            {JSON.stringify(messages)}
         </div>
     )
 }
