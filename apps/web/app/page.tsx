@@ -1,12 +1,11 @@
+"use client"
 import "./page.module.css";
-import { authOptions } from "../lib/auth";
-import { getServerSession } from "next-auth";
+import Canvas from "../components/canvas";
 
-export default async function Home() {
-  const session = await getServerSession(authOptions)
+export default function Home() {
   return (
     <div>
-      {JSON.stringify(session)}
+      <Canvas />
     </div>
   )
 }
