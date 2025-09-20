@@ -5,6 +5,11 @@ import { KonvaEventObject } from "konva/lib/Node"
 import MyCircle from "./shapes/circle"
 import MyReactangle from "./shapes/rectangle"
 import MyPolygon from "./shapes/polygon"
+import { useWorkspaceContext } from "../hooks/storeHooks"
+import useSocket from "../hooks/socket"
+import { outgoingMessage } from "@repo/common/types"
+import { useSession } from "next-auth/react"
+import { msg } from "../types/common"
 
 export type shape = {
     type: "rect",
@@ -25,13 +30,15 @@ export type shape = {
     strokeWidth:number,
     id:string
 }
-export default function Canvas() {
+export default function Canvas({roomId}:{roomId:string}) {
+    const {data:session} = useSession()
     const [isDrawing, setIsDrawing] = useState(false)
     const [startPos, setStartPos] = useState<{ x: number | undefined, y: number | undefined }>({ x: 0, y: 0 })
     const [currentShape, setCurrentShape] = useState<shape | null>(null)
-    const [shapes, setShapes] = useState<shape[]>([])
     const [drawingShape, setDrawingShape] = useState("rect")
-
+    const { messages, updateMessage } = useWorkspaceContext((state) => state)
+    const { socket } = useSocket()
+    console.log(messages)
     function handlemouseDown(e: KonvaEventObject<MouseEvent>) {
         setIsDrawing(!isDrawing)
         setStartPos(
@@ -118,7 +125,28 @@ export default function Canvas() {
             setIsDrawing(false)
             if (currentShape) {
                 if ((currentShape.type === "rect" && (currentShape.width !== 0 || currentShape.height !== 0)) || ((currentShape.type === "circle" || currentShape.type === "RegularPolygon") && (currentShape.radius !== 0))) {
-                    setShapes([...shapes, currentShape])
+                    const message = JSON.stringify(currentShape)
+                    if (socket) {
+                        const request: outgoingMessage = {
+                            type: "message",
+                            roomId: roomId,
+                            userId:session?.user.id!,
+                            payload: {
+                                message: message
+                            }
+                        }
+                        socket.send(JSON.stringify(request))
+                    }
+                    const date = new Date()
+                    const mymsg: msg[] = [
+                        {
+                            message: message,
+                            createdAt: date.toLocaleDateString("en-AZ"),
+                            userId: session?.user.id!,
+                            userName: session?.user.name,
+                            userImage: session?.user.image
+                        }]
+                    updateMessage(mymsg)
                 }
             }
             setCurrentShape(null)
@@ -138,7 +166,8 @@ export default function Canvas() {
                     onMouseUp={handlemouseUp}
                 >
                     <Layer>
-                        {shapes.map(shape => {
+                        {messages.map(message => {
+                            let shape = JSON.parse(message.message)
                             if (shape.type === "rect") {
                                 return (
                                     <MyReactangle shape={shape}/>

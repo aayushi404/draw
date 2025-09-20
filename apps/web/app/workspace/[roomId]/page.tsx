@@ -10,6 +10,8 @@ import { useWorkspaceContext } from "../../../hooks/storeHooks"
 import { getMessages } from "../../../actions/getdata"
 import { type msg } from "../../../types/common"
 import { useParams } from "next/navigation"
+import DrawArea from "../../../components/DrawArea"
+import Canvas from "../../../components/canvas"
 
 export default function Room() {
     const params = useParams<{ roomId: string }>()
@@ -62,8 +64,7 @@ export default function Room() {
         return (
             <>
                 <Users />
-                <ChatArea/>
-                <InputArea roomId={ roomId} />
+                <DrawArea roomId={ roomId} /> 
             </>
         )
     }
