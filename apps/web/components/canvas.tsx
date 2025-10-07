@@ -169,28 +169,28 @@ export default function Canvas({roomId, messages, updateMessage, socket}:canvasP
                     onMouseUp={handlemouseUp}
                 >
                     <Layer>
-                        {messages.map(message => {
-                            if(message.message === "") return
+                        {messages.map((message, idx) => {
+                            if(message.message === "") return null
                             const shape = JSON.parse(message.message)
                             if (shape.type === "rect") {
                                 return (
-                                    <MyReactangle shape={shape}/>
+                                    <MyReactangle shape={shape} key={idx}/>
                                 )
                             } else if (shape.type === "circle") {
                                 return (
-                                    <MyCircle shape={ shape} />
+                                    <MyCircle shape={ shape} key={idx}/>
                                 )
                             } else if (shape.type === "RegularPolygon") {
                                 return (
-                                    <MyPolygon shape={shape}/>
+                                    <MyPolygon shape={shape} key={idx}/>
                                 )
                             }
                         })}
                         {currentShape && currentShape.type === "rect" ?
                             (<MyReactangle shape={currentShape}/>) : currentShape && currentShape.type === "circle" ? (
-                                <MyCircle shape={currentShape}/>
+                                <MyCircle shape={currentShape} key={messages.length}/>
                             ) : currentShape ? (
-                                <MyPolygon shape={currentShape!}/>
+                                <MyPolygon shape={currentShape!} key={messages.length}/>
                             ):null
                         }
                     </Layer>
