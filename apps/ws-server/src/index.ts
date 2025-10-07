@@ -73,6 +73,22 @@ wss.on("connection", (ws) => {
                 })
                 await createChat(data.roomId, data.userId,data.payload.message)
             }
+            if (data.type === "leave") { 
+                const user = await getUser(data.userId)
+                spaces[data.roomId] = spaces[data.roomId]?.filter(c => c !== ws)!
+                actives[data.roomId] = actives[data.roomId]?.filter(u => u.name !== user!.name)!
+                const response: incommingMessage = {
+                    type: "leave",
+                    name: user?.name!,
+                    roomId: data.roomId,
+                    userId:data.userId
+                }
+                spaces[data.roomId]?.forEach(client => {
+                    if (client.readyState === WebSocket.OPEN) {
+                        client.send(JSON.stringify(response))
+                    }
+                })
+            }
         } catch (e) {
             const errorResponse: incommingMessage = {
                 type: "error",

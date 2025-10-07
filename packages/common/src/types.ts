@@ -24,6 +24,11 @@ type incommingMessage = {
         status:number,
         message: string
     }
+} | {
+    type: "leave",
+    name: string,
+    roomId: string,
+    userId:string
 }
 
 //client -> ws
@@ -38,6 +43,10 @@ type outgoingMessage = {
     payload: {
         message:string
     }
+} | {
+    type: "leave",
+    userId: string,
+    roomId:string
 }
 
 export type { incommingMessage, outgoingMessage , activeUsersType}

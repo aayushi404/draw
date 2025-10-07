@@ -15,7 +15,7 @@ export default function Room() {
     const { isConnected, lastmessage} = useSocket()
     const { roomId } = params
     const hasMounted = useRef(false)
-    const {updateActiveUsers, updateMessage, activeUsers} = useWorkspaceContext((state) => state)
+    const {updateActiveUsers, updateMessage, deleteActiveUsers} = useWorkspaceContext((state) => state)
     useEffect(() => {
         if (hasMounted.current) {
             const response = lastmessage
@@ -33,6 +33,9 @@ export default function Room() {
                             createdAt: date.toLocaleDateString("en-ZA")
                         }]
                     updateMessage(newMsg)
+                }
+                if (response.type === "leave") {
+                    deleteActiveUsers(response.name)
                 }
             }
         } else {
