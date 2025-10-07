@@ -12,7 +12,7 @@ export default function Workspace({ session }: { session: Session }) {
     const router = useRouter()
     const [roomId, setRoomId] = useState("")
     const { isConnected, socket, lastmessage } = useSocket()
-    const { updateActiveUsers} = useWorkspaceContext((state) => state)
+    const updateActiveUsers = useWorkspaceContext((state) => state.updateActiveUsers)
     useEffect(() => {
         if (isConnected && socket && lastmessage) {
             if (lastmessage.type === "create" || lastmessage.type === "join") {

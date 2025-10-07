@@ -1,11 +1,8 @@
 import prisma from "@repo/db/client";
-import { NextRequest, NextResponse } from "next/server";
+import {NextRequest, NextResponse } from "next/server";
 import { type msg } from "../../../../types/common";
-export async function GET(
-    request:NextRequest,
-    {params}:{params:{roomId:string}}
-) {
-    const { roomId } = params
+export async function GET(_req:NextRequest, ctx:RouteContext<'/api/[roomId]/messages'>) {
+    const { roomId } =  await ctx.params
     try {
         const messages = await prisma.chat.findMany({
             where: {

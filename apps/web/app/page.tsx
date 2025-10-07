@@ -8,15 +8,16 @@ import { useMounted } from "../hooks/mounted";
 
 export default function Home() {
   const mount = useMounted()
-  const {data:session} = useSession()
-  const [tempState, setTempState] = useState<msg[]>([{message:"", createdAt:"", userId:session?.user.id!}])
+  const { data: session } = useSession()
+  const [tempState, setTempState] = useState<msg[]>([{ message: "", createdAt: "", userId: session?.user?.id ?? "" }])
   function updateState(newMsg: msg[]) {
     setTempState((prev) => [...prev, ...newMsg])
   }
-  if(!mount) return null
-  return (
-    <div>
-      <Canvas roomId={null} messages={tempState!} updateMessage={updateState} socket={null} />
-    </div>
-  )
+  if (mount){
+    return (
+      <div>
+        <Canvas roomId={null} messages={tempState!} updateMessage={updateState} socket={null} />
+      </div>
+    )
+  }
 }

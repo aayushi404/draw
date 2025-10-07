@@ -88,7 +88,7 @@ export default function Canvas({roomId, messages, updateMessage, socket}:canvasP
     }
         function handlemouseMove(e: KonvaEventObject<MouseEvent>) {
             if (!isDrawing) return
-            let pos = e.target.getStage()?.getPointerPosition()!
+            const pos = e.target.getStage()?.getPointerPosition()!
             if (currentShape && currentShape.type === "rect") {
                 setCurrentShape((prev) => {
                     return {
@@ -105,8 +105,8 @@ export default function Canvas({roomId, messages, updateMessage, socket}:canvasP
                 }
                 )
             } else if (currentShape && (currentShape.type === "circle" || currentShape.type === "RegularPolygon")) {
-                let xLength = (pos.x - currentShape.x) * (pos.x - currentShape.x)
-                let yLength = (pos.y - currentShape.y) * (pos.y - currentShape.y)
+                const xLength = (pos.x - currentShape.x) * (pos.x - currentShape.x)
+                const yLength = (pos.y - currentShape.y) * (pos.y - currentShape.y)
 
                 setCurrentShape((prev) => {
                     return {
