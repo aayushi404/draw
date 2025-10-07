@@ -1,8 +1,7 @@
 import prisma from "@repo/db/client";
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import { type msg } from "../../../../types/common";
 export async function GET(
-    request:NextRequest,
     {params}:{params:{roomId:string}}
 ) {
     const { roomId } = params
@@ -27,7 +26,7 @@ export async function GET(
             response.push(msg)
         })
         return NextResponse.json({payload:response, status:200})
-    } catch {
-        return NextResponse.json({message:"error occured while fetching messages", status:404})
+    } catch (err){
+        return NextResponse.json({message:"error occured while fetching messages",error:err, status:404})
     }
 }

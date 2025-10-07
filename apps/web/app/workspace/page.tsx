@@ -8,7 +8,6 @@ export default async function Page() {
     if (!session) {
         redirect("/")
     }
-    console.log("workspace")
     return (
         <Workspace session={ session } />
     )

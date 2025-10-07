@@ -1,12 +1,10 @@
 "use client"
-import { Stage, Layer, Circle, Rect, RegularPolygon } from "react-konva"
-import { useRef, useEffect, useState } from "react"
+import { Stage, Layer, } from "react-konva"
+import { useState } from "react"
 import { KonvaEventObject } from "konva/lib/Node"
 import MyCircle from "./shapes/circle"
 import MyReactangle from "./shapes/rectangle"
 import MyPolygon from "./shapes/polygon"
-import { useWorkspaceContext } from "../hooks/storeHooks"
-import useSocket from "../hooks/socket"
 import { outgoingMessage } from "@repo/common/types"
 import { useSession } from "next-auth/react"
 import { msg } from "../types/common"
@@ -30,15 +28,20 @@ export type shape = {
     strokeWidth:number,
     id:string
 }
-export default function Canvas({roomId}:{roomId:string}) {
+
+type canvasProps = {
+    roomId: string | null,
+    messages: msg[],
+    updateMessage: (newMsgs: msg[]) => void,
+    socket:WebSocket | null
+}
+export default function Canvas({roomId, messages, updateMessage, socket}:canvasProps) {
     const {data:session} = useSession()
     const [isDrawing, setIsDrawing] = useState(false)
     const [startPos, setStartPos] = useState<{ x: number | undefined, y: number | undefined }>({ x: 0, y: 0 })
     const [currentShape, setCurrentShape] = useState<shape | null>(null)
     const [drawingShape, setDrawingShape] = useState("rect")
-    const { messages, updateMessage } = useWorkspaceContext((state) => state)
-    const { socket } = useSocket()
-    console.log(messages)
+    
     function handlemouseDown(e: KonvaEventObject<MouseEvent>) {
         setIsDrawing(!isDrawing)
         setStartPos(
@@ -129,7 +132,7 @@ export default function Canvas({roomId}:{roomId:string}) {
                     if (socket) {
                         const request: outgoingMessage = {
                             type: "message",
-                            roomId: roomId,
+                            roomId: roomId!,
                             userId:session?.user.id!,
                             payload: {
                                 message: message
@@ -167,7 +170,8 @@ export default function Canvas({roomId}:{roomId:string}) {
                 >
                     <Layer>
                         {messages.map(message => {
-                            let shape = JSON.parse(message.message)
+                            if(message.message === "") return
+                            const shape = JSON.parse(message.message)
                             if (shape.type === "rect") {
                                 return (
                                     <MyReactangle shape={shape}/>
@@ -182,14 +186,12 @@ export default function Canvas({roomId}:{roomId:string}) {
                                 )
                             }
                         })}
-                        {
-                            currentShape && currentShape.type === "rect" ?
-                                (<MyReactangle shape={currentShape}/>) : currentShape && currentShape.type === "circle" ? (
-                                    <MyCircle shape={currentShape}/>
-                                ) : currentShape ? (
-                                    <MyPolygon shape={currentShape!}/>
-                                ):null
-                            
+                        {currentShape && currentShape.type === "rect" ?
+                            (<MyReactangle shape={currentShape}/>) : currentShape && currentShape.type === "circle" ? (
+                                <MyCircle shape={currentShape}/>
+                            ) : currentShape ? (
+                                <MyPolygon shape={currentShape!}/>
+                            ):null
                         }
                     </Layer>
                 </Stage>

@@ -1,16 +1,21 @@
-import { outgoingMessage } from "@repo/common/types"
 import prisma from "@repo/db/client"
 
 const getUser = async (userId: string) => {
-    const user = await prisma.user.findUnique({
-        where: {
-            id: userId
+    try {
+        const user = await prisma.user.findUnique({
+            where: {
+                id: userId
+            }
+        })
+        if (!user) {
+            throw new Error("user not exist")
         }
-    })
-    if (!user) {
-        throw new Error("user not exist")
+        return { name: user.name, image: user.image }
+    } catch (err) {
+        if (err instanceof Error) {
+            console.log(`Error occured: ${err.message}`)
+        }
     }
-    return {name:user.name, image:user.image}
 }
 
 const createChat = async (roomId: string, userId: string, message: string) => {

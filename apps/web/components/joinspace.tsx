@@ -37,13 +37,19 @@ export default function Workspace({ session }: { session: Session }) {
     }
     async function createFormAction() {
         if(socket && session){
-            const roomId = await createRoom(session.user.id!)
-            const request: outgoingMessage = {
-                    type: "create",
-                    roomId: roomId,
-                    userId:session.user.id
+            try {
+                const roomId = await createRoom(session.user.id!)
+                if (roomId) {
+                    const request: outgoingMessage = {
+                        type: "create",
+                        roomId: roomId as string,
+                        userId: session.user.id
+                    }
+                    socket.send(JSON.stringify(request))
                 }
-            socket.send(JSON.stringify(request))
+            } catch (err) {
+                console.log(err)
+            }
         }
     }
     if (isConnected && socket) {

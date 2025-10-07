@@ -16,7 +16,7 @@ wss.on("connection", (ws) => {
             if (data.type === "create" || data.type === "join") {
                 const userInfo = await getUser(data.userId)
                 if (!userInfo) {
-                    throw new Error("user not exist")
+                    throw new Error("user does not exist")
                 }
                 if (data.type === "create") {
                     spaces[data.roomId] = []
