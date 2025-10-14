@@ -50,11 +50,12 @@ export default function Canvas({roomId, messages, updateMessage, socket}:canvasP
                 y: e.target.getStage()?.getPointerPosition()?.y
             }
         )
+        console.log(startPos)
         if (drawingShape === "rect") {
             setCurrentShape({
                 type: "rect",
-                x: e.target.getStage()?.getPointerPosition()?.x!,
-                y: e.target.getStage()?.getPointerPosition()?.y!,
+                x: e.target.getStage()?.getPointerPosition()?.x || 0,
+                y: e.target.getStage()?.getPointerPosition()?.y || 0,
                 width: 0,
                 height: 0,
                 stroke: "white",
@@ -64,8 +65,8 @@ export default function Canvas({roomId, messages, updateMessage, socket}:canvasP
         } else if (drawingShape === "circle") {
                 setCurrentShape({
                     type: "circle",
-                    x: e.target.getStage()?.getPointerPosition()?.x!,
-                    y: e.target.getStage()?.getPointerPosition()?.y!,
+                    x: e.target.getStage()?.getPointerPosition()?.x || 0,
+                    y: e.target.getStage()?.getPointerPosition()?.y || 0,
                     radius: 0,
                     stroke: "white",
                     strokeWidth: 4,
@@ -75,8 +76,8 @@ export default function Canvas({roomId, messages, updateMessage, socket}:canvasP
             } else if (drawingShape === "RegularPolygon") {
                 setCurrentShape({
                     type: "RegularPolygon",
-                    x: e.target.getStage()?.getPointerPosition()?.x!,
-                    y: e.target.getStage()?.getPointerPosition()?.y!,
+                    x: e.target.getStage()?.getPointerPosition()?.x || 0,
+                    y: e.target.getStage()?.getPointerPosition()?.y || 0,
                     sides: 3,
                     radius: 0,
                     stroke: "white",
@@ -88,7 +89,7 @@ export default function Canvas({roomId, messages, updateMessage, socket}:canvasP
     }
         function handlemouseMove(e: KonvaEventObject<MouseEvent>) {
             if (!isDrawing) return
-            const pos = e.target.getStage()?.getPointerPosition()!
+            const pos = e.target.getStage()?.getPointerPosition() || {x:0, y:0}
             if (currentShape && currentShape.type === "rect") {
                 setCurrentShape((prev) => {
                     return {
@@ -133,7 +134,7 @@ export default function Canvas({roomId, messages, updateMessage, socket}:canvasP
                         const request: outgoingMessage = {
                             type: "message",
                             roomId: roomId!,
-                            userId:session?.user.id!,
+                            userId:session?.user.id || "",
                             payload: {
                                 message: message
                             }
@@ -145,7 +146,7 @@ export default function Canvas({roomId, messages, updateMessage, socket}:canvasP
                         {
                             message: message,
                             createdAt: date.toLocaleDateString("en-AZ"),
-                            userId: session?.user.id!,
+                            userId: session?.user.id || "",
                             userName: session?.user.name,
                             userImage: session?.user.image
                         }]

@@ -1,4 +1,4 @@
-import NextAuth, { NextAuthOptions, SessionStrategy } from "next-auth"
+import { NextAuthOptions, SessionStrategy } from "next-auth"
 import { PrismaAdapter } from "@auth/prisma-adapter"
 import prisma  from "@repo/db/client"
 import Google from "next-auth/providers/google"
@@ -28,16 +28,10 @@ const authOptions: NextAuthOptions = {
     async jwt({ token }) {
       return token;
     },
-    async session({ session, token }: any) {
-      const user = await prisma.user.findUnique({
-        where: {
-          id: token.sub,
-        },
-      });
+    async session({ session, token}) {
+      
       if (token) {
-        session.accessToken = token.accessToken;
-        session.user.id = token.sub;
-        //session.user.token = token
+        session.user.id = token.sub || "";
       }
       return session;
     },

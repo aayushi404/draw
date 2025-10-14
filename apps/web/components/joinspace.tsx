@@ -21,8 +21,8 @@ export default function Workspace({ session }: { session: Session }) {
                 router.push(`/workspace/${lastmessage.roomId}`)                
             }  
         }
-        
-    },[lastmessage])
+    // eslint-disable-next-line react-hooks/exhaustive-deps 
+    },[lastmessage, isConnected, socket])
     async function joinFormAction(roomId: string) {
         if (socket && session) {
             const request: outgoingMessage = {

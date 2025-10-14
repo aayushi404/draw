@@ -41,6 +41,7 @@ export default function Room() {
         } else {
             hasMounted.current = true
         }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [lastmessage]);
 
     useEffect(() => {
@@ -57,6 +58,7 @@ export default function Room() {
             }
         }
         fetchMessages()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     },[])
     if(isConnected){
         return (
