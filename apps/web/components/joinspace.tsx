@@ -53,7 +53,7 @@ export default function Workspace({ session }: { session: Session }) {
     if (isConnected && socket) {
         return (
             <div>
-                <div>Create or Join a workspace</div>
+                <div className="bg-white">Create or Join a workspace</div>
                 <div>
                     <form action={() => joinFormAction(roomId)}>
                         <label htmlFor="roomId">Enter room Id</label>

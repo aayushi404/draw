@@ -1,5 +1,6 @@
 import { incommingMessage, outgoingMessage, activeUsersType } from "@repo/common/types";
-import {WebSocket, WebSocketServer} from "ws";
+import {WebSocket} from "ws";
+import { WebSocketServer } from "ws";
 import express from "express";
 import cors from "cors";
 import http from "http"
@@ -12,7 +13,7 @@ const wss = new WebSocketServer({ server })
 const spaces: Record<string, WebSocket[]> = {}
 const actives:Record<string, activeUsersType[]> = {}
 
-app.use(cors({ origin: ["*"], methods: ["*"] }))
+app.use(cors({ origin: "*", methods: "*" }))
 
 wss.on("connection", (ws) => {
     ws.on("error", console.error)
@@ -115,4 +116,4 @@ wss.on("connection", (ws) => {
     })
 })
 
-app.listen(8080, () => console.log("server has started at port 8080"))
+server.listen(8080, () => console.log("server has started at port 8080"))

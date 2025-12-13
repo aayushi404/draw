@@ -17,7 +17,7 @@ const WebSocketProvider = ({ children } : {children:ReactNode}) => {
     const [error, setError] = useState<Event | null>(null)
 
     useEffect(() => {
-        const wss = new WebSocket("ws://localhost:8080")
+        const wss = new WebSocket("http://localhost:8080")
         wss.onopen = () => {
             console.log("websocket get connected from client")
             setSocket(wss)
