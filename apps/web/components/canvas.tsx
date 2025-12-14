@@ -8,6 +8,7 @@ import MyPolygon from "./shapes/polygon"
 import { outgoingMessage } from "@repo/common/types"
 import { useSession } from "next-auth/react"
 import { msg } from "../types/common"
+import { Button } from "./ui/button"
 
 export type shape = {
     type: "rect",
@@ -157,10 +158,10 @@ export default function Canvas({roomId, messages, updateMessage, socket}:canvasP
         }
         return (
             <>
-                <div className="fixed">
-                    <button onClick={() => setDrawingShape("circle")}>circle</button>
-                    <button onClick={() => setDrawingShape("rect")}>rectangle</button>
-                    <button onClick={() => setDrawingShape("RegularPolygon")}>triangle</button>
+                <div className="fixed flex gap-2 mt-2">
+                    <Button onClick={() => setDrawingShape("circle")} className="px-2">circle</Button>
+                    <Button onClick={() => setDrawingShape("rect")}>rectangle</Button>
+                    <Button onClick={() => setDrawingShape("RegularPolygon")}>triangle</Button>
                 </div>
                 <Stage
                     width={window.innerWidth}

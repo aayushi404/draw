@@ -1,12 +1,15 @@
 "use client"
 import { useRouter } from "next/navigation";
-import { Button } from "@repo/ui/button";
 import { createRoom } from "../actions/joinspace";
 import { useState, useEffect } from "react";
 import { Session } from "next-auth";
 import useSocket from "../hooks/socket";
 import { useWorkspaceContext } from "../hooks/storeHooks";
 import { outgoingMessage } from "@repo/common/types";
+import { Card, CardContent, CardDescription, CardHeader } from "./ui/card";
+import { Button } from "./ui/button";
+import { Input } from "./ui/input";
+import { ModeToggle } from "./ui/themeToggle";
 
 export default function Workspace({ session }: { session: Session }) {
     const router = useRouter()
@@ -52,19 +55,22 @@ export default function Workspace({ session }: { session: Session }) {
     }
     if (isConnected && socket) {
         return (
-            <div>
-                <div className="bg-white">Create or Join a workspace</div>
-                <div>
+            <Card>
+                <CardHeader>
+                    <CardDescription className="">Create or Join a workspace to collaborate</CardDescription>
+                    <ModeToggle></ModeToggle>
+                </CardHeader>
+                <CardContent>
                     <form action={() => joinFormAction(roomId)}>
                         <label htmlFor="roomId">Enter room Id</label>
-                        <input name="roomId" id="roomId" placeholder="123456" value={roomId} onChange={(e) => setRoomId(e.target.value)}/>
+                        <Input name="roomId" id="roomId" placeholder="123456" value={roomId} onChange={(e) => setRoomId(e.target.value)}/>
                         <Button type={ "submit"}>join</Button>
                     </form>
                     <form action={() => createFormAction()}>
                         <Button type="submit">create</Button>
                     </form>
-                </div>
-            </div>
+                </CardContent>
+            </Card>
         )
     }
 }
