@@ -3,14 +3,14 @@ import { createStore } from "zustand/vanilla";
 import { type msg } from "../types/common";
 
 export type workspaceStates = {
-    activeUsers: activeUsersType[];
-    messages:msg[];
+    activeUsers: activeUsersType[],
+    messages:msg[]
 }
 
 export type workspaceActions = {
-    updateActiveUsers: (newUsers: activeUsersType[]) => void;
-    deleteActiveUsers:(name:string) => void;
-    updateMessage : (newMsgs:msg[]) => void;
+    updateActiveUsers: (newUsers: activeUsersType[]) => void,
+    deleteActiveUsers:(name:string) => void
+    updateMessage : (newMsgs:msg[]) => void
 }
 
 export type workspaceStore = workspaceStates & workspaceActions
