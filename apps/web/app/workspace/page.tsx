@@ -10,6 +10,10 @@ import { useSession } from "next-auth/react"
 import { useState } from "react"
 import { msg } from "@/types/common"
 import Canvas from "@/components/canvas"
+import { Button } from "@/components/ui/button"
+import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
 
 /*
 export default async function Page() {
@@ -26,7 +30,7 @@ export default async function Page() {
 }
 */
 
-export default async function Page(){
+export default function Page(){
     const mount = useMounted()
     const { data: session } = useSession()
     const [tempState, setTempState] = useState<msg[]>([{ message: "", createdAt: "", userId: session?.user?.id ?? "" }])
@@ -35,7 +39,8 @@ export default async function Page(){
     }
     if (mount){
         return (
-        <div>
+        <div className="">
+            {session && <Workspace session={session}/>}
             <Canvas roomId={null} messages={tempState!} updateMessage={updateState} socket={null} />
         </div>
         )

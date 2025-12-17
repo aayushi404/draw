@@ -7,11 +7,16 @@ import useSocket from "../hooks/socket";
 import { useWorkspaceContext } from "../hooks/storeHooks";
 import { outgoingMessage } from "@repo/common/types";
 import { Card, CardContent, CardDescription, CardHeader } from "./ui/card";
-import { Button } from "./ui/button";
-import { Input } from "./ui/input";
 import { ModeToggle } from "./ui/themeToggle";
+import { Button } from "@/components/ui/button"
+import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+
+
 
 export default function Workspace({ session }: { session: Session }) {
+    console.log(session)
     const router = useRouter()
     const [roomId, setRoomId] = useState("")
     const { isConnected, socket, lastmessage } = useSocket()
@@ -55,22 +60,34 @@ export default function Workspace({ session }: { session: Session }) {
     }
     if (isConnected && socket) {
         return (
-            <Card>
-                <CardHeader>
-                    <CardDescription className="">Create or Join a workspace to collaborate</CardDescription>
-                    <ModeToggle></ModeToggle>
-                </CardHeader>
-                <CardContent>
-                    <form action={() => joinFormAction(roomId)}>
+            <Dialog>
+                <form>
+                    <DialogTrigger asChild>
+                    <Button variant="outline" className="absolute sm:right-5 sm:top-4 right:2 top:2 z-1002 pointer-events-auto">Collab</Button>
+                    </DialogTrigger>
+                    <DialogContent className="sm:max-w-[425px]">
+                    <DialogHeader>
+                        <DialogTitle>Collab Together</DialogTitle>
+                        <DialogDescription>
+                        Join a room to Draw with your friends.
+                        </DialogDescription>
+                    </DialogHeader>
+                     <form action={() => joinFormAction(roomId)}>
                         <label htmlFor="roomId">Enter room Id</label>
                         <Input name="roomId" id="roomId" placeholder="123456" value={roomId} onChange={(e) => setRoomId(e.target.value)}/>
                         <Button type={ "submit"}>join</Button>
                     </form>
-                    <form action={() => createFormAction()}>
+                    <DialogFooter>
+                        <DialogClose asChild>
+                        <Button variant="outline">Cancel</Button>
+                        </DialogClose>
+                        <form action={() => createFormAction()}>
                         <Button type="submit">create</Button>
                     </form>
-                </CardContent>
-            </Card>
+                    </DialogFooter>
+                    </DialogContent>
+                </form>
+            </Dialog>
         )
     }
 }
